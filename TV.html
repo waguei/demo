@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html>
+
+  <body>
+    <style>
+      .tv_view {
+        background-image: url('http://image.cn.made-in-china.com/2f0j01hvUtmMWyfluj/32%E5%AF%B8%E6%B6%B2%E6%99%B6LED%E7%94%B5%E8%A7%86%E6%9C%BA%E5%A3%B3%EF%BC%88WY-03%EF%BC%89.jpg');
+        background-repeat: no-repeat;
+        width: 1273px;
+        height: 896px;
+        margin: 0 auto;
+        position: relative;
+      }
+      .view {
+        z-index: 1;
+        width: 1143px;
+        height: 636px;
+        overflow: hidden;
+        position: relative;
+        margin: 0 auto;
+        top: 63px;
+        background: black;
+      }
+      .view > iframe {
+        position: absolute;
+        top: -30px;
+        display: none;
+      }
+      iframe.active {
+        display: block;
+      }
+      #tv_power {
+        content: '';
+        width: 8px;
+        height: 8px;
+        background: chartreuse;
+        position: absolute;
+        bottom: 140px;
+        left: 52px;
+        border-radius: 4px;
+      }
+      .hidden {
+        display: none;
+      }
+    </style>
+    <!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
+    <div class="tv_view">
+      <div class="view">
+        <div id="player1" rel="1"></div>
+        <div id="player2" rel="2"></div>
+        <div id="player3" rel="3"></div>
+        <div id="player4" rel="4"></div>
+        <div id="player5" rel="5"></div>
+        <div id="player6" rel="6"></div>
+        <div id="player7" rel="7"></div>
+        <div id="player8" rel="8"></div>
+        <div id="player9" rel="9"></div>
+        <div id="player10" rel="10"></div>
+      </div>
+      <div id="tv_power" class="hidden"></div>
+    </div>
+    <script type="text/javascript" src="http://graphics.pop6.com/images/common/js/jquery/jquery-1.8.2.min.js"></script>
+    <script>
+      //  This code loads the IFrame Player API code asynchronously.
+      var tag = document.createElement('script'),
+          firstScriptTag = document.getElementsByTagName('script')[0],
+          player1,
+          player2,
+          player3,
+          player4,
+          player5,
+          player6,
+          player7,
+          player8,
+          player9,
+          player10,
+          done=false,
+          tvSwitch = 'off',
+          chechNowVideo;
+
+      tag.src = "https://www.youtube.com/iframe_api";
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+      function onYouTubeIframeAPIReady() {
+        // what do fox say
+        player1 = new YT.Player('player1', {
+          height: '713',
+          width: '1143',
+          videoId: 'jofNR_WkoCE',
+          events: {
+          }
+        });
+        // 新聞
+        player2 = new YT.Player('player2', {
+          height: '713',
+          width: '1143',
+          videoId: 'MTm6lFM2vLQ',
+          events: {
+          }
+        });
+        // LUCY 預告
+        player3 = new YT.Player('player3', {
+          height: '713',
+          width: '1143',
+          videoId: 'y8BLZsLEOyo',
+          events: {
+          }
+        });
+        // 電影老實說 美國隊長
+        player4 = new YT.Player('player4', {
+          height: '713',
+          width: '1143',
+          videoId: 'jofNR_WkoCE',
+          events: {
+          }
+        });
+        // 倉鼠
+        player5 = new YT.Player('player5', {
+          height: '713',
+          width: '1143',
+          videoId: 'XPHlHuhBVFI',
+          events: {
+          }
+        });
+        // Ailly 跳傘
+        player6 = new YT.Player('player6', {
+          height: '713',
+          width: '1143',
+          videoId: 'ITHWYLnnMs8',
+          events: {
+          }
+        });
+        // 冰桶
+        player7 = new YT.Player('player7', {
+          height: '713',
+          width: '1143',
+          videoId: 'YOa7ZjxRuKM',
+          events: {
+          }
+        });
+        // 動物影片
+        player8 = new YT.Player('player8', {
+          height: '713',
+          width: '1143',
+          videoId: 'Kc6By-4NvZA',
+          events: {
+          }
+        });
+        // 嬰兒與狗
+        player9 = new YT.Player('player9', {
+          height: '713',
+          width: '1143',
+          videoId: 'MfjvacT7SZA',
+          events: {
+          }
+        });
+        // 蠟筆小新
+        player10 = new YT.Player('player10', {
+          height: '713',
+          width: '1143',
+          videoId: 'geht8eAp9gU',
+          events: {
+          }
+        });
+      }
+
+      function checkVideoId(number) {
+        switch (number) {
+          case 1:
+            return player1;
+            break;
+          case 2:
+            return player2;
+            break;
+          case 3:
+            return player3;
+            break;
+          case 4:
+            return player4;
+            break;
+          case 5:
+            return player5;
+            break;
+          case 6:
+            return player6;
+            break;
+          case 7:
+            return player7;
+            break;
+          case 8:
+            return player8;
+            break;
+          case 9:
+            return player9;
+            break;
+          case 10:
+            return player10;
+            break;
+        }
+      }
+
+
+      function playNextVideo() {
+        if(tvSwitch == 'on') {
+          var now = $('.active'),
+              now_num = parseInt($('.active').attr('rel')),
+              tag_num = parseInt(now.attr('rel'))+1;
+          if (now_num == 10) {
+            tag_num = 1;
+          }
+          now.removeClass('active');
+          $('[rel='+tag_num+']').addClass('active');
+          checkVideoId(now_num).stopVideo();
+          checkVideoId(tag_num).playVideo();
+        } 
+      }
+      function playPrevVideo() {
+        if(tvSwitch == 'on') {
+          var now = $('.active'),
+              now_num = parseInt($('.active').attr('rel')),
+              tag_num = parseInt(now.attr('rel'))-1;
+          if (now_num == 1) {
+            tag_num = 10;
+          }
+          now.removeClass('active');
+          $('[rel='+tag_num+']').addClass('active');
+          checkVideoId(now_num).stopVideo();
+          checkVideoId(tag_num).playVideo();
+        }
+      }
+      function jumpToVideo(num) {
+        if(tvSwitch == 'on') {
+          if($('.active').length != 0 ) {
+            var now_number = $('.active').attr('rel');
+            $('.active').removeClass('active');
+            checkVideoId(parseInt(now_number)).stopVideo();
+          }
+          $('[rel='+num+']').addClass('active');
+          checkVideoId(num).playVideo();
+        }
+      }
+      function plusVolume() {
+        var now_num = parseInt($('.active').attr('rel')),
+            now_vol = checkVideoId(now_num).getVolume(),
+            vol = now_vol+20;
+        if(vol > 100) {
+          vol = 100;
+        }
+        checkVideoId(now_num).setVolume(vol);
+      }
+      function minusVolume() {
+        var now_num = parseInt($('.active').attr('rel')),
+            now_vol = checkVideoId(now_num).getVolume(),
+            vol = now_vol-20;
+        if(vol < 0) {
+          vol = 0;
+        }
+        checkVideoId(now_num).setVolume(vol);
+      }
+      function controlTv() {
+        if(tvSwitch == 'off') {
+          tvSwitch = 'on';
+          $('#tv_power').removeClass('hidden');
+          if(chechNowVideo == undefined) {
+            $('#player1').addClass('active');
+            player1.playVideo();
+          } else {
+            jumpToVideo(chechNowVideo);
+          }
+
+        } else {
+          tvSwitch = 'off';
+          $('#tv_power').addClass('hidden');
+          chechNowVideo = parseInt($('.active').attr('rel'));
+          $('.active').removeClass('active');
+          checkVideoId(chechNowVideo).stopVideo();
+        }
+      }
+    </script>
+    <script language="javascript" type="text/javascript">
+      var wsUri = "ws://118.163.12.207:38389/websocket/?encoding=text";
+
+      function testWebSocket() {
+        websocket = new WebSocket(wsUri);
+        websocket.onopen = function(evt) { onOpen(evt) };
+        websocket.onclose = function(evt) { onClose(evt) };
+        websocket.onmessage = function(evt) { onMessage(evt) };
+        websocket.onerror = function(evt) { onError(evt) };
+      }
+
+      function onOpen(evt) {
+        //writeToScreen("CONNECTED");
+      }
+
+      function onClose(evt) {
+        //writeToScreen("DISCONNECTED");
+      }
+
+      function onMessage(evt) {
+        var data = jQuery.parseJSON( evt.data );
+        switch (data.message) {
+          case 'controltv':
+            controlTv(0);
+            break;
+          case 'next':
+            playNextVideo();
+            break;
+          case 'prev':
+            playPrevVideo();
+            break;
+          case 'plus':
+            plusVolume();
+            break;
+          case 'minus':
+            minusVolume();
+            break;
+          case '1':
+            jumpToVideo(1);
+            break;
+          case '2':
+            jumpToVideo(2);
+            break;
+          case '3':
+            jumpToVideo(3);
+            break;
+          case '4':
+            jumpToVideo(4);
+          case '5':
+            jumpToVideo(5);
+            break;
+          case '6':
+            jumpToVideo(6);
+            break;
+          case '7':
+            jumpToVideo(7);
+            break;
+          case '8':
+            jumpToVideo(8);
+            break;
+          case '9':
+            jumpToVideo(9);
+            break;
+          case '10':
+            jumpToVideo(10);
+        }
+      }
+
+      function onError(evt) {
+        writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
+      }
+
+      function doSend(message) {
+        //writeToScreen("SENT: " + message);
+        websocket.send(message);
+      }
+
+
+      function init() {
+        testWebSocket();
+      }
+
+      window.addEventListener("load", init, false);
+
+    </script>
+  </body>
+
+</html>
