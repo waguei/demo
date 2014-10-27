@@ -1,0 +1,207 @@
+
+<!DOCTYPE html>
+<meta charset="utf-8" />
+    <title>WebSocket Test Model</title>
+    <style>
+        body,h1,h2,textarea,p {
+            margin: 0;
+            padding: 0;
+        }
+        .username_mask {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background-color: #333;
+            opacity: 0.6;
+        }
+        .username_popup {
+            position: absolute;
+            width: 600px;
+            height: 200px;
+            top: 10%;
+            background: white;
+            z-index: 1001;
+            left: 50%;
+            margin-left: -300px;
+            padding: 20px;
+        }
+        .username_popup_content {
+            position: absolute;
+        }
+        .username_title {
+            padding-bottom: 20px;
+        }
+        .no_name {
+            display: none;
+            color: red;
+        }
+        .name_btn_wrap {
+            padding-top: 10px;
+        }
+        .content {
+            padding:20px;
+        }
+        .page_title {
+            padding-bottom: 20px;
+        }
+        #output_screen {
+            border: 1px solid #999;
+            padding: 10px;
+            height: 600px;
+            margin-bottom: 20px;
+            overflow-y: auto;
+            position:relative;
+        }
+        #output_screen:before {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            top:10px;
+            right:10px;
+            border-radius: 8px;
+        }
+        #output_screen.active:before {
+            background-color: green;
+        }
+        #output_screen.inactive:before {
+            background-color: red;
+        }
+        .text_area {
+            display: inline-block;
+            vertical-align: top;
+            padding-right: 10px;
+        }
+        textarea {
+            width: 500px;
+        }
+        .send_btn {
+            display: inline-block;
+            padding: 10px;
+            background: blue;
+            font-weight: bold;
+            color: #fff;
+        }
+    </style>
+    <script type="text/javascript" src="http://graphics.pop6.com/images/common/js/jquery/jquery-1.8.2.min.js"></script>
+    <script language="javascript" type="text/javascript">
+        var wsUri = "ws://118.163.12.207:38389/websocket/?encoding=text";
+        var output;
+
+        function testWebSocket() {
+                websocket = new WebSocket(wsUri);
+                websocket.onopen = function(evt) { onOpen(evt) };
+                websocket.onclose = function(evt) { onClose(evt) };
+                websocket.onmessage = function(evt) { onMessage(evt) };
+                websocket.onerror = function(evt) { onError(evt) };
+            }
+            
+        function onOpen(evt) {
+                //writeToScreen("CONNECTED");
+                document.getElementById("output_screen").setAttribute("class", "active");
+            }
+
+        function onClose(evt) {
+                //writeToScreen("DISCONNECTED");
+                document.getElementById("output_screen").setAttribute("class", "inactive");
+            }
+
+        function onMessage(evt) {
+                var data = jQuery.parseJSON( evt.data );
+                if ($("#output_screen").scrollTop() == $("#output_screen")[0].scrollHeight - 620 ) {
+                    
+                    var scorllToBottom = 1;
+                }
+                writeToScreen('<p><span class="handle">' + data.handle +'</span> : <span class="message">'+ data.message +'</span>');
+                
+                if (scorllToBottom == 1) {
+                    $("#output_screen").scrollTop($("#output_screen")[0].scrollHeight);
+                }
+                //writeToScreen('<span style="color: blue;">RESPONSE: ' + evt.data+'</span>');
+                //websocket.close();
+            }
+
+        function onError(evt) {
+                writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
+            }
+
+        function doSend(message) {
+                //writeToScreen("SENT: " + message);
+                websocket.send(message);
+            }
+
+        function writeToScreen(message) {
+                var pre = document.createElement("p");
+                pre.style.wordWrap = "break-word";
+                pre.innerHTML = message;
+                output.appendChild(pre);
+            }
+            
+        function submit() {
+                var search = document.getElementById("message").value;
+                doSend(search);
+                document.getElementById("message").value = "";
+            }
+            
+        function init() {
+                output = document.getElementById("output"); 
+                testWebSocket();
+                jQuery('textarea').keydown(function(e) {
+                        if (e.ctrlKey != 1 && e.keyCode == 13) {
+                                submit();
+                                return false;
+                        }
+                });
+                jQuery('#name_cancel').click(function() {
+                        $('#username').hide()
+                });
+                jQuery('#name_submit').click(function() {
+                        if ($('#user_name').val() != "") {
+                              doSend("/name " + $('#user_name').val() );
+                              writeToScreen("Welcom!! " + $('#user_name').val() + "!!");
+                              $('#user_name').val("");
+                              $('#username').hide();
+                              $('.no_name').hide();
+                        } else {
+                              $('.no_name').show();
+                        }
+                        
+                });
+        }
+            
+        window.addEventListener("load", init, false);
+        
+    </script>
+    <div class="content">
+        <h2 class="page_title">WebSocket Test Model</h2>
+        <div id="output_screen"><div id="status"></div><div id="output"></div></div>
+
+        <div class="submit_area">
+            <div class="text_area"><textarea rows="4" cols="50" type="text" id="message"></textarea></div>
+            <div class="send_btn" onclick="submit()">Send</div>
+        </div>
+        <div id="readme">
+            基本模型(聊天室)： http://118.163.12.207:38389/ <BR>
+                說明：無需認証即可進入聊天室，會產生隨機姓名，返回格式為JSON需要FE支援畫面美化。<BR>
+                      目前提供指令 /name <你想要的名字><BR>
+            認證測試模型: http://118.163.12.207:38389/login <BR>
+            JSON返回模型: http://118.163.12.207:38389/whatever.json <BR>
+        </div>
+    </div>
+    <div id="username">
+        <div class="username_popup">
+            <div class="username_popup_content">
+                <h2 class="username_title">Please Enter Your Name</h2>
+                <input id="user_name" type="text" />
+                <div class="no_name">Please Enter Your Name</div>
+                <div class="name_btn_wrap">
+                    <div class="send_btn" id="name_submit">Submit</div>
+                    <div class="send_btn" id="name_cancel">Cancel</div>
+                </div>
+            </div>
+        </div>
+        <div class="username_mask"></div>
+    </div> 
+</html>
