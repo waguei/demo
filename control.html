@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+    <title>JS Bin</title>
+    <style>
+      .content {
+        border: 2px solid #999;
+        padding:10px;
+        margin: 10px;
+      }
+      .power {
+        background-image: url('http://docs.blackberry.com/zh-tw/smartphone_users/deliverables/22579/icon_power_off_Precsn_Zen_50_990044_11.jpg');
+        width: 40px;
+        height: 40px;
+        margin: 0 auto;
+        margin-bottom: 10px;
+      }
+      .wrap {
+        text-align: center;
+        padding-bottom: 10px;
+      }
+      .btn {
+        display: inline-block;
+        padding: 9px 18px;
+        color: white;
+        background: #000;
+        font-weight: bold;
+        font-size: 28px;
+        border-radius: 4px;
+      }
+      .mid {
+        margin: 0 10px;
+      }
+    </style>
+    <script language="javascript" type="text/javascript">
+      var wsUri = "ws://118.163.12.207:38389/websocket/?encoding=text";
+
+      function testWebSocket() {
+        websocket = new WebSocket(wsUri);
+        websocket.onopen = function(evt) { onOpen(evt) };
+        websocket.onclose = function(evt) { onClose(evt) };
+        websocket.onmessage = function(evt) { onMessage(evt) };
+        websocket.onerror = function(evt) { onError(evt) };
+      }
+
+      function onOpen(evt) {
+        //writeToScreen("CONNECTED");
+      }
+
+      function onClose(evt) {
+        //writeToScreen("DISCONNECTED");
+      }
+
+      function onMessage(evt) {
+
+      }
+
+      function onError(evt) {
+
+      }
+
+      function doSend(message) {
+        //writeToScreen("SENT: " + message);
+        websocket.send(message);
+      }
+
+
+      function init() {
+        testWebSocket();
+      }
+
+      window.addEventListener("load", init, false);
+
+    </script>
+  </head>
+  <body>
+    <div class="content">
+      <div class="power" onclick="doSend('controltv')"></div>
+      <div class="num_wrap">
+        <div class="wrap">
+          <div class="btn" onclick="doSend(1)">1</div>
+          <div class="btn mid" onclick="doSend(2)">2</div>
+          <div class="btn" onclick="doSend(3)">3</div>
+        </div>
+        <div class="wrap">
+          <div class="btn" onclick="doSend(4)">4</div>
+          <div class="btn mid" onclick="doSend(5)">5</div>
+          <div class="btn" onclick="doSend(6)">6</div>
+        </div>
+        <div class="wrap">
+          <div class="btn" onclick="doSend(7)">7</div>
+          <div class="btn mid" onclick="doSend(8)">8</div>
+          <div class="btn" onclick="doSend(9)">9</div>
+        </div>
+        <div class="wrap">
+          <div class="btn" onclick="doSend('plus')">+</div>
+          <div class="btn mid" onclick="doSend(0)">0</div>
+          <div class="btn" onclick="doSend('minus')">-</div>
+        </div>
+      </div>
+      <div class="wrap">
+        <div class="left btn" onclick="doSend('prev')"><</div>
+          <div class="btn mid" onclick="doSend()">?</div>
+          <div class="right btn" onclick="doSend('next')">></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
