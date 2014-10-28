@@ -45,7 +45,11 @@
         font-size: 76px;
         position: absolute;
         top: 70px;
-        left: 100px;    
+        left: 100px;
+      }
+      #channel.thanks {
+        top: 320px;
+        left: 320px;
       }
       .hidden {
         display: none;
@@ -222,9 +226,14 @@
       }
 
       function showChannel(num) {
-          $('#channel').removeClass('hidden').text('TV  '+num);
+          $('#channel').addClass('hidden').removeClass('thanks')
+          if (num == 11) {
+            $('#channel').removeClass('hidden').addClass('thanks').text('Thanks for Watching');
+          } else {
+            $('#channel').removeClass('hidden').text('TV  '+num);
+          }
           setTimeout(function(){
-            $('#channel').addClass('hidden');
+            $('#channel').addClass('hidden').removeClass('thanks');
           }, 3000);
       }
       function playNextVideo() {
