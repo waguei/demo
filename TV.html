@@ -39,6 +39,14 @@
         left: 52px;
         border-radius: 4px;
       }
+      #channel {
+        color: chartreuse;
+        z-index: 1000;
+        font-size: 76px;
+        position: absolute;
+        top: 70px;
+        left: 100px;    
+      }
       .hidden {
         display: none;
       }
@@ -56,7 +64,9 @@
         <div id="player8" rel="8"></div>
         <div id="player9" rel="9"></div>
         <div id="player10" rel="10"></div>
+        <div id="player11" rel="11"></div>
       </div>
+      <div id="channel" class="hidden"></div>
       <div id="tv_power" class="hidden"></div>
     </div>
     <script type="text/javascript" src="http://graphics.pop6.com/images/common/js/jquery/jquery-1.8.2.min.js"></script>
@@ -74,6 +84,7 @@
           player8,
           player9,
           player10,
+          player11,
           done=false,
           tvSwitch = 'off',
           chechNowVideo;
@@ -82,19 +93,19 @@
       firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
       function onYouTubeIframeAPIReady() {
-        // what do fox say
+        // Red Violin
         player1 = new YT.Player('player1', {
           height: '713',
           width: '1143',
-          videoId: 'jofNR_WkoCE',
+          videoId: 'yi_i-8vT2Fo',
           events: {
           }
         });
-        // 新聞
+        // what do fox say
         player2 = new YT.Player('player2', {
           height: '713',
           width: '1143',
-          videoId: 'MTm6lFM2vLQ',
+          videoId: 'jofNR_WkoCE',
           events: {
           }
         });
@@ -110,7 +121,7 @@
         player4 = new YT.Player('player4', {
           height: '713',
           width: '1143',
-          videoId: 'jofNR_WkoCE',
+          videoId: 'n67-AQE3KAA',
           events: {
           }
         });
@@ -122,19 +133,19 @@
           events: {
           }
         });
-        // Ailly 跳傘
+        // NB廣告
         player6 = new YT.Player('player6', {
           height: '713',
           width: '1143',
-          videoId: 'ITHWYLnnMs8',
+          videoId: 'cOJNKLPCFuo',
           events: {
           }
         });
-        // 冰桶
+        // 新聞
         player7 = new YT.Player('player7', {
           height: '713',
           width: '1143',
-          videoId: 'YOa7ZjxRuKM',
+          videoId: 'MTm6lFM2vLQ',
           events: {
           }
         });
@@ -159,6 +170,14 @@
           height: '713',
           width: '1143',
           videoId: 'geht8eAp9gU',
+          events: {
+          }
+        });
+        // OK GO
+        player11 = new YT.Player('player11', {
+          height: '713',
+          width: '1143',
+          videoId: 'u1ZB_rGFyeU',
           events: {
           }
         });
@@ -196,10 +215,18 @@
           case 10:
             return player10;
             break;
+          case 11:
+            return player11;
+            break;
         }
       }
 
-
+      function showChannel(num) {
+          $('#channel').removeClass('hidden').text('TV  '+num);
+          setTimeout(function(){
+            $('#channel').addClass('hidden');
+          }, 3000);
+      }
       function playNextVideo() {
         if(tvSwitch == 'on') {
           var now = $('.active'),
@@ -212,6 +239,7 @@
           $('[rel='+tag_num+']').addClass('active');
           checkVideoId(now_num).stopVideo();
           checkVideoId(tag_num).playVideo();
+          showChannel(tag_num);
         } 
       }
       function playPrevVideo() {
@@ -226,6 +254,7 @@
           $('[rel='+tag_num+']').addClass('active');
           checkVideoId(now_num).stopVideo();
           checkVideoId(tag_num).playVideo();
+          showChannel(tag_num);
         }
       }
       function jumpToVideo(num) {
@@ -237,6 +266,7 @@
           }
           $('[rel='+num+']').addClass('active');
           checkVideoId(num).playVideo();
+          showChannel(num);
         }
       }
       function plusVolume() {
@@ -267,13 +297,19 @@
           } else {
             jumpToVideo(chechNowVideo);
           }
-
+          showChannel(tvSwitch);
         } else {
           tvSwitch = 'off';
           $('#tv_power').addClass('hidden');
           chechNowVideo = parseInt($('.active').attr('rel'));
           $('.active').removeClass('active');
           checkVideoId(chechNowVideo).stopVideo();
+        }
+      }
+      function endDemo() {
+        if(tvSwitch == 'off') {
+          controlTv();
+          jumpToVideo(11);
         }
       }
     </script>
@@ -289,11 +325,9 @@
       }
 
       function onOpen(evt) {
-        //writeToScreen("CONNECTED");
       }
 
       function onClose(evt) {
-        //writeToScreen("DISCONNECTED");
       }
 
       function onMessage(evt) {
@@ -342,18 +376,17 @@
             break;
           case '10':
             jumpToVideo(10);
+          case 'end':
+            endDemo();
         }
       }
 
       function onError(evt) {
-        writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
       }
 
       function doSend(message) {
-        //writeToScreen("SENT: " + message);
-        websocket.send(message);
-      }
 
+      }
 
       function init() {
         testWebSocket();
